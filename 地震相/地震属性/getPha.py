@@ -11,7 +11,7 @@ import pandas as pd
 filePath = "D:\\workspace\\数据集处理\\地震相\\seismic\\"
 newFilePath = "D:\\workspace\\数据集处理\\地震相\\pha\\"
 
-for item in range(1000):
+for item in range(1000,4000):
     image = np.array(pd.read_csv(filePath+'%s.csv' % item,header=None))
     print(image.shape)  #(782, 1006)
     image = image.T  #(1006, 782)

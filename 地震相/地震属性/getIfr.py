@@ -11,6 +11,7 @@ import pandas as pd
 filePath = "D:\\workspace\\数据集处理\\地震相\\seismic\\"
 newFilePath = "D:\\workspace\\数据集处理\\地震相\\ifr\\"
 
+freq = 1/897
 for item in range(1000):
     image = np.array(pd.read_csv(filePath+'%s.csv' % item,header=None))
     print(image.shape)  #(782, 1006)
@@ -19,12 +20,10 @@ for item in range(1000):
     for i in range(590):
         st = image[:, i]
         hilbert_f = hilbert(st)
-
-        # =============1
-        a1 = np.array((hilbert_f[1:] - hilbert_f[:-1]) * st[1:])
-        a2 = np.array((st[1:] - st[:-1]) * hilbert_f[1:])
-        b = (st ** 2 + hilbert_f ** 2)[1:]
-        ifr = ((a1 - a2) / b)
+        pha = np.arctan(hilbert_f / st)
+        ifr = list((pha[1:] - pha[:-1]) / freq)
+        ifr.insert(0, ifr[0])
+        ifr = np.array(ifr)
         res.append(ifr)
 
     res = np.array(res,dtype=np.float32)
