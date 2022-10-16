@@ -46,6 +46,8 @@ def getBorder(input):
             d[i, j] = np.sqrt(np.square(dx[i, j]) + np.square(dy[i, j]))  # 图像梯度幅值作为图像强度值
 
     NMS = np.copy(d)
+    # NMS = new_gray
+
 
     # step4. 双阈值算法检测、连接边缘
     W3, H3 = NMS.shape
@@ -53,6 +55,7 @@ def getBorder(input):
     # 定义高低阈值
     TL = 0.1 * np.max(NMS)
     TH = 0.3 * np.max(NMS)
+    print(TL, TH)
     for i in range(1, W3 - 1):
         for j in range(1, H3 - 1):
             if (NMS[i, j] < TL):
@@ -75,13 +78,13 @@ if __name__ == '__main__':
     from dilate import dilate_bin_image
 
 
-    filePath = "D:\\workspace\\数据集处理\\地震相\\border\\"
+    filePath = "D:\\workspace\\数据集处理\\地震相\\label\\"
     item = 0
     input = np.array(pd.read_csv(filePath + '%s.csv' % item, header=None))
-    # input = getBorder(input)
+    input = getBorder(input)
 
-    kernel = np.ones(shape=(5, 5))  #无,3,5,7,9
-    input = dilate_bin_image(input, kernel)
+    # kernel = np.ones(shape=(5, 5))  #无,3,5,7,9
+    # input = dilate_bin_image(input, kernel)
 
     # pd.DataFrame(getBorder(input)).to_csv('%s.csv' % item, header=False, index=False)
 

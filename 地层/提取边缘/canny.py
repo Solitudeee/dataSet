@@ -32,7 +32,7 @@ def getBorder(input):
 
     # plt.imshow(new_gray, cmap="gray")
 
-    # new_gray= input
+
 
     # step2.增强 通过求梯度幅值
     W1, H1 = new_gray.shape
@@ -45,7 +45,57 @@ def getBorder(input):
             dy[i, j] = new_gray[i + 1, j] - new_gray[i, j]
             d[i, j] = np.sqrt(np.square(dx[i, j]) + np.square(dy[i, j]))  # 图像梯度幅值作为图像强度值
 
+    # setp3.非极大值抑制 NMS
+    W2, H2 = d.shape
     NMS = np.copy(d)
+    # NMS[0, :] = NMS[W2 - 1, :] = NMS[:, 0] = NMS[:, H2 - 1] = 0
+    # for i in range(1, W2 - 1):
+    #     for j in range(1, H2 - 1):
+    #
+    #         if d[i, j] == 0:
+    #             NMS[i, j] = 0
+    #         else:
+    #             gradX = dx[i, j]
+    #             gradY = dy[i, j]
+    #             gradTemp = d[i, j]
+    #
+    #             # 如果Y方向幅度值较大
+    #             if np.abs(gradY) > np.abs(gradX):
+    #                 weight = np.abs(gradX) / np.abs(gradY)
+    #                 grad2 = d[i - 1, j]
+    #                 grad4 = d[i + 1, j]
+    #                 # 如果x,y方向梯度符号相同
+    #                 if gradX * gradY > 0:
+    #                     grad1 = d[i - 1, j - 1]
+    #                     grad3 = d[i + 1, j + 1]
+    #                 # 如果x,y方向梯度符号相反
+    #                 else:
+    #                     grad1 = d[i - 1, j + 1]
+    #                     grad3 = d[i + 1, j - 1]
+    #
+    #             # 如果X方向幅度值较大
+    #             else:
+    #                 weight = np.abs(gradY) / np.abs(gradX)
+    #                 grad2 = d[i, j - 1]
+    #                 grad4 = d[i, j + 1]
+    #                 # 如果x,y方向梯度符号相同
+    #                 if gradX * gradY > 0:
+    #                     grad1 = d[i + 1, j - 1]
+    #                     grad3 = d[i - 1, j + 1]
+    #                 # 如果x,y方向梯度符号相反
+    #                 else:
+    #                     grad1 = d[i - 1, j - 1]
+    #                     grad3 = d[i + 1, j + 1]
+    #
+    #             gradTemp1 = weight * grad1 + (1 - weight) * grad2
+    #             gradTemp2 = weight * grad3 + (1 - weight) * grad4
+    #             if gradTemp >= gradTemp1 and gradTemp >= gradTemp2:
+    #                 NMS[i, j] = gradTemp
+    #             else:
+    #                 NMS[i, j] = 0
+
+    # plt.imshow(NMS, cmap = "gray")
+    # return NMS
 
     # step4. 双阈值算法检测、连接边缘
     W3, H3 = NMS.shape
@@ -75,13 +125,13 @@ if __name__ == '__main__':
     from dilate import dilate_bin_image
 
 
-    filePath = "D:\\workspace\\数据集处理\\地震相\\border\\"
+    filePath = "D:\\workspace\\数据集处理\\地震相\\label\\"
     item = 0
     input = np.array(pd.read_csv(filePath + '%s.csv' % item, header=None))
-    # input = getBorder(input)
+    input = getBorder(input)
 
-    kernel = np.ones(shape=(5, 5))  #无,3,5,7,9
-    input = dilate_bin_image(input, kernel)
+    # kernel = np.ones(shape=(5, 5))
+    # input = dilate_bin_image(input, kernel)
 
     # pd.DataFrame(getBorder(input)).to_csv('%s.csv' % item, header=False, index=False)
 
